@@ -1,0 +1,88 @@
+Q1. Use the above encoding tree to decode the bit sequence `0101100011`.
+
+A1. MOONS
+
+
+
+Q2. Prepare a table for the above encoding tree that lists each character with its assigned bit sequence.
+Use your table to encode the string `"SONS"`.
+
+A2. 
+
+Character	Bit sequence
+M		010
+N		00
+O		1
+S		011
+
+"SONS": 011100011
+
+
+
+Q3. Huffman codes obey the _prefix_ property: no character's encoded bit sequence is a prefix of any other.
+What feature of an encoding tree demonstrates that it obeys the prefix property?
+
+A3. The fact that an interior node does not store a character means that an encoding tree obeys the prefix property.
+
+
+
+Q4. Flatten the encoding tree above on the right into its sequence of bits (tree shape) and sequence of characters (tree leaves).
+
+A4. 1101000 - NMSO
+
+
+
+Q5. Unflatten the sequences `110100100` (tree shape) and `FLERA` (tree leaves) to reconstruct the original encoding tree.
+
+A5. 
+
+      *
+    /   \
+   /     \
+  *       *
+ / \     / \
+F   *   R   A
+   / \
+  L  E
+
+  110100100
+  FLERA
+
+
+
+Q6. Construct a Huffman coding tree for the input `"BOOKKEEPER"`.
+
+A6. 
+
+      *
+    /   \
+   /     \
+  *       *
+ / \     / \
+E   *   O   K
+   / \
+  *   B
+ / \
+P   R
+
+
+
+Q7. Calculate the entropy of your Huffman tree for `"BOOKKEEPER"`.
+Confirm that if you had chosen to break ties in a different manner when constructing the tree, this alternate tree has the same entropy as the optimal result.
+
+A7. Entropy : [(E) 3*2 + (O) 2*2 + (K) 2*2 + (B) 1*3 + (P) 1*4 + (R) 1*4] / 10 = 2,5
+By symmetry, we can observe that interchanging the characters of the same length would result in the same entropy.
+
+
+
+Q8. Consider the space of inputs of length 1000 that consists of varied occurrences of 100 distinct characters.
+Of those various inputs, contrast which inputs result in a balanced Huffman tree versus those that produce a
+very lopsided Huffman tree. As an example, what if each of the 100 characters were represented 10 times
+(for a total of 1000 characters)? What would the Huffman tree look like?
+What if, instead, 99 of the characters was represented only once, but the remaining character was represented 901 times (again, for a total of 1000 characters)? What would the Huffman tree look like?
+Which of the two Huffman trees achieves more significant compression?
+What does this tell you about what makes for a "good" versus "bad" Huffman tree?
+
+A8. If the characters have an equal repartition, the tree will be perfectly balanced. However, we will lose the interest of compression as each character will have the same length of encoding. On the other hand, an input with a big disparity in the repartition of characters will lead to an unbalanced tree, which will be more performant to compress the input.
+We can see that Huffman trees have an opposite performance compared to BSTs: the more unbalanced a Huffman tree is, the better the performance. 
+

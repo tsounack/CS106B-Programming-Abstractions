@@ -1,0 +1,112 @@
+Memory Debugging Warmup
+-----------------------
+Q1. What does the yellow background for a test case indicate in the SimpleTest result window?
+
+A1. The yellow background indicates that there is a memory leak for this test case. 
+
+
+
+Q2. What is the observed consequence of a test that uses `delete` on a memory address that has already been deallocated?
+
+A2. The program crashes. (Red Stanford Library error in output)
+
+
+
+Q3. On your system, what is the observed consequence of `badDeallocate`? Under what circumstances (if any) did the buggy code trigger an error or crash?
+
+A3. On my system, even the first test resulted in the code to crash. I tried to reduce the loop to 1 iteration to only do one call to badDeallocate, and it still resulted in the code to crash. Commenting out the first test to call the second test also results (as expected) in a crash. 
+
+
+
+Q4. How is a segmentation fault presented on your system?
+
+A4. The program crashes (but the windows stays open). We can read the error message in red:
+A segmentation fault (SIGSEGV) occurred during program execution
+This error indicates your program attempted to dereference a pointer to an invalid memory address (possibly out of bounds, deallocated, nullptr, ...)
+
+
+
+Labyrinth
+---------
+Q5. Give a different valid path through the example labyrinth that collects all three magical items.
+
+A5. WNNEWSSEESNWSWWN
+
+
+
+Sorting Linked Lists
+---------------------
+Q6. If the `deallocateList` utility function were implemented recursively, give a rough estimate of the maximum length list it could successfully handle. What would be the observed result from attempting to deallocate a list longer than this maximum?
+
+A6. Using a recursive implementation, an element in the list being deallocated would cost one stack frame. During a previous assignment, this computer's number of stacks was estimated to 16 694, which corresponds to the maximum length list that deallocateList could successfully handle.
+If a list longer than this were to be inputted to deallocateList, it would cause a stack overflow.
+
+
+
+Q7. The sort prototype takes a `ListNode*` by reference. Explain why the pointer itself needs to be passed by reference and what the consequence would be if it were not.
+
+A7. With runSort, we are modifying the list of nodes by rearranging them. During this process, the front pointer of the list changes (in most cases), which means we are modifying the pointer given as argument. If we were to not pass it by reference, the program would not compile as we would be trying to modify an object not meant to be modified. An alternative to passing the pointer by reference would be to use double pointers (which would not need to be passed by reference).
+
+
+
+Q8. Run time trials and provide your results that confirm that RunSort is O(N^2) . Verify you can achieve O(N) results on inputs constructed to play to its strengths.
+
+A8. 
+
+Time trial runsort
+    Line 562 TIME_OPERATION runSort(list) (size =    10000) completed in    0.110 secs
+    Line 562 TIME_OPERATION runSort(list) (size =    20000) completed in    0.535 secs
+    Line 562 TIME_OPERATION runSort(list) (size =    40000) completed in    2.495 secs
+    Line 562 TIME_OPERATION runSort(list) (size =    80000) completed in   10.890 secs
+
+We can see that the run times correspond to a O(N^2) complexity using random numbers.
+
+Time trial runsort best
+    Line 579 TIME_OPERATION runSort(list) (size =  1000000) completed in    0.007 secs
+    Line 579 TIME_OPERATION runSort(list) (size =  2000000) completed in    0.013 secs
+    Line 579 TIME_OPERATION runSort(list) (size =  4000000) completed in    0.027 secs
+    Line 579 TIME_OPERATION runSort(list) (size =  8000000) completed in    0.053 secs
+
+Running runsort with inputs constructed to play to its strength results in a O(N) complexity. 
+
+
+
+Q9. Run time trials and provide your results that confirm that QuickSort is O(NlogN) . Verify the runtime degrades to O(N^2) on inputs constructed to trigger the worst case behavior.
+
+A9.
+
+Time trial quickSort
+    Line 596 TIME_OPERATION quickSort(list) (size =  1000000) completed in    0.406 secs
+    Line 596 TIME_OPERATION quickSort(list) (size =  2000000) completed in    1.183 secs
+    Line 596 TIME_OPERATION quickSort(list) (size =  4000000) completed in    5.126 secs
+    Line 596 TIME_OPERATION quickSort(list) (size =  8000000) completed in   12.914 secs
+
+This corresponds to a O(NlogN) time complexity.
+
+Time trial quickSort worse
+    Line 613 TIME_OPERATION quickSort(list) (size =     1000) completed in    0.001 secs
+    Line 613 TIME_OPERATION quickSort(list) (size =     2000) completed in    0.007 secs
+    Line 613 TIME_OPERATION quickSort(list) (size =     4000) completed in    0.026 secs
+    Line 613 TIME_OPERATION quickSort(list) (size =     8000) completed in    0.103 secs
+
+Having a sorted input causes the degradation in time complexity (O(N^2)), as the pivot is the first element and is always a 'bad choice' since it has no value smaller than itself. It is also interesting to note that this case is more prone to stack overflowing.
+
+
+
+Q10. Run the provided timing trials that compare your linked list QuickSort to a Vector sort on the same sequence and report the results. Who wins and why?
+
+A10. 
+
+Time linked list quicksort vs vector quicksort
+    Line 684 TIME_OPERATION quickSort(list) (size =    50000) completed in    0.007 secs
+    Line 685 TIME_OPERATION v.sort()        (size =    50000) completed in    0.071 secs
+    Line 684 TIME_OPERATION quickSort(list) (size =   100000) completed in    0.015 secs
+    Line 685 TIME_OPERATION v.sort()        (size =   100000) completed in    0.148 secs
+    Line 684 TIME_OPERATION quickSort(list) (size =   200000) completed in    0.030 secs
+    Line 685 TIME_OPERATION v.sort()        (size =   200000) completed in    0.283 secs
+    Line 684 TIME_OPERATION quickSort(list) (size =   400000) completed in    0.098 secs
+    Line 685 TIME_OPERATION v.sort()        (size =   400000) completed in    0.519 secs
+
+We can see that while both solutions are O(NlogN), our quickSort is much faster (about 10 times). This is due to the fact that we are working with a linked list on quickSort, and much less computation is done - we are reassigning pointers, while sort is creating arrays and adding elements to it.
+
+

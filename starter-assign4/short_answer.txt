@@ -1,0 +1,67 @@
+Before submitting this file, make sure that there are no more TODO
+placeholders remaining in the file (and remove this comment too).
+
+Warmup
+------
+Q1. What is the value of `totalMoves` after stepping over the call to `moveTower` in `hanoiAnimation`?
+
+A1. The value of totalMoves is 15 after stepping over the call to 'moveTower' in 'hanoiAnimation'.
+
+
+
+Q2. What is the value of the `totalMoves` variable after stepping over the first recursive sub-call?
+(In other words, within `moveTower` and just after stepping over the first recursive sub-call
+to `moveTower` inside the `else` statement.)
+
+A2. Just after stepping over the first recursive sub-call to 'moveTower', 'totalMoves' = 7
+
+
+
+Q3. After breaking at the base case of `moveTower` and then choosing Step Out, where do you end up?
+(What function are you in, and at what line number?)
+What is the value of the `totalMoves` variable at this point?
+
+A3. After breaking at the base case of 'moveTower' and choosing to Step Out, we end up at the first line of the else statement of moveTower (line 77). The value of 'totalMoves' at this point is 1.
+
+
+
+Q4. What is the smallest possible input that you used to trigger the bug in the program?
+
+A4. The smallest possible input used is nums = {1}
+
+
+
+Q5. Identify the one-character error in the code and explain why that bug causes the function
+to return the output you see when running on the minimal input you listed above.
+You should be able to specifically account for how the error causes the result to
+change from “completely correct” to “terribly wrong.”
+
+A5. The one-character error in the code was '+=' instead of '+' in 'sumSoFar += v[index]' in the recursive call. With '+=', the code was adding v[index] to the value of SumSoFar, which meant that when the code was recursively calling buggyCount a second time, it was essentially doing the same exact call as the previous recursive call. 
+
+Predict
+-------
+Q6. In your own words, describe some of the specific drawbacks to using global variables
+and explain why a program-wide constant like keypad does not suffer from the same 
+drawbacks.
+
+A6. Defining a global variable means that several functions will be using this variable, and if there is an accidental modification of this variable anywhere it will affect multiple parts of the code - which will be very hard to debug. Even if the variable is meant to be modified, if the order of the function calls processing this variable ever changes it will lead to unexpected behaviours.
+
+Redistrict
+----------
+Q7. A leader of a political party in your hometown learns you just took CS106B.
+They offer you a job working on cutting-edge software that applies algorithms to optimize
+gerrymandering during the process of redistricting.
+
+What questions might you ask about this job before making a decision? What might be the drawbacks?
+Which communities would be affected by the work you're doing?
+
+Please write your list of 3-5 questions and be sure to include ethical considerations.
+
+A7.
+
+Questions:
+- What is the aim of this redistricting?
+- Will I be able to choose the criteria to optimize my algorithm?
+- What is your vision of gerrymandering?
+
+The drawback of this offer is ethical, as it goes against the values of a democratic system. The communities that would be affected are the historical minorities.

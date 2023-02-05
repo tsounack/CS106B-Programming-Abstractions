@@ -1,0 +1,104 @@
+Warmup
+------
+
+Q1. The display of the Stack in the debugger uses the labels `top` and `bottom` to mark the two ends of the stack. How are the contents labeled when the Stack contains only one element?
+
+A1. When the Stack contains only one element, it is labeled bottom/top.
+
+
+
+Q2. For which type of inputs does the function go into an infinite loop?
+
+A2. The functions go into an infinite loop for an input that starts and ends with a negative number.
+
+
+
+Q3. Show your edited code for `duplicateNegatives` that fixes the problem with the infinite loop.
+
+A3. 
+
+/* This function is intended to modify a queue of characters to duplicate
+ * any negative numbers.
+ */
+void duplicateNegatives(Queue<int>& q) {
+    int n = q.size();
+    for (int i = 0; i < n; i++) {
+        int val = q.dequeue();
+        q.enqueue(val);
+        if (val < 0) {
+            q.enqueue(val);   // double up on negative numbers
+        }
+    }
+}
+
+
+
+Q4. What is the better fix to `sumStack` that corrects the bug?
+
+A4. A better fix to correct the bug would be to set the total at 0 instead of using the first value of the stack (which might not exist). This way, if the stack is empty it returns the total which is 0, and if the stack is not empty it adds each element to the total in the while loop.
+
+
+
+
+Maze
+----
+Q5. After you have written your test cases, describe your testing strategy to confirm that your `validatePath` operates as intended. How confident are you that it works correctly in all cases?
+
+A5. To test the validatePath function, I wrote three test cases. The first one verifies if the function raises an error if there is a loop in the path. The second one verifies that for an empty path. The third one verifies that the function raises no error on a valid path. Since the provided tests verify the function's behaviour if the path does not start at entry, does not end at the exit or goes through a wall, the testing is considered exhaustive. I am therefore confident that the function works correctly in all cases.
+
+
+
+Q6. While BFS and DFS are equivalently capable in terms of finding a solution, the two can differ in which solution is found (when there are multiple) and how quickly a solution is discovered. An advantage of BFS is that it always finds the shortest possible solution, explain why this is guaranteed for BFS and not for DFS. An advantage of DFS is that for some mazes it will find a solution more quickly than BFS, explain how this could be so.
+
+A6. BFS finds the shortest possible solution: since it searches all the paths for a given length before searching paths with a higher length, when a solution is found it is guaranteed to be the shortest possible solution (although there might be other successful paths with that same length). However it performs an exhaustive search for each length, and is therefore not guaranteed to find a solution faster than DFS.
+DFS tries every path until it fails, meaning even the first path can be successful. This means that it can be faster than BFS in some cases. However, the first solution found is not guaranteed to be the shortest possible.
+
+
+
+Q7. Most students are sold on the benefit of the fancy features provided by `Vector`, `Grid`, and `Set` but the ADT skeptics may question the value of `Stack` and `Queue` ADTs, seeing them as nothing more than a restricted `Vector`. Make your best argument to convince them of the benefits these ADTS have over `Vector`.
+
+A7. Stacks and Queues are very interesting ADTs, as they offer a high efficiency in many cases. For instance, the maze that we just designed would have been less intuitive to code and more complex if it was designed using other ADTs. While vectors require a lot of time to find certain values, Stacks and Queues are very fast to provide values - on the condition that they are used properly. They are therefore very interesting for complex applications where there is a lot of data, as they have the possibility to provide a program with a lower complexity compared to other ADTs.
+
+
+
+
+Search Engine
+-------------
+Q8. Sketch the contents of the inverted index built from the `res/tiny.txt` database file.
+
+A8. 
+
+	"milk"		{"www.shoppinglist.com"}
+	"fish"		{"www.shoppinglist.com", "www.dr.seuss.net", "www.bigbadwolf.com"}
+	"bread"		{"www.shoppinglist.com"}
+	"5lbmms"	{"www.shoppinglist.com"}
+	"red"		{"www.rainbow.org", "www.dr.seuss.net"}
+	"green" 	{"www.rainbow.org"}
+	"blue"		{"www.rainbow.org", "www.dr.seuss.net"}
+	"one"		{"www.dr.seuss.net"}
+	"two"		{"www.dr.seuss.net"}
+	"10"		{"www.dr.seuss.net"}
+	"I"		{"www.bigbadwolf.com"}
+	"eat"		{"www.bigbadwolf.com"}
+	
+	
+	
+
+
+Beyond Algorithmic Analysis
+---------------------------
+Q9. In a short paragraph, describe a real or plausible scenario not previously presented in lecture in which using techniques like benchmarking or counting "write" steps to improve the performance of an algorithm might benefit Earth's environment. Include your thoughts on how a software engineer working on this piece of code might identify such potential benefits and take them into consideration when designing the code.
+
+A9. Improving the performance of an algorithm requiring a lot of energy to run would have a positive impact on Earth's environment. For instance, YouTube's recommendation algorithm is used by billions of user - and each time a search is made, a server has to compute the results. We can see how improving its efficiency would lead to massive gains in energy consumption, and therefore would result in less CO2 being produced for each search. Less computing power needed would also mean less hardware needed, and silicons have a big carbon footprint. A software engineer working on this piece of code would probably be looking to optimise the algorithm to achieve a better user experience, and a positive consequence of this would be energy and CO2 efficiency.
+
+
+
+Q10. According to the contract that IBM struck with the state of Indiana, the criteria for optimization were improving efficiency of the overall welfare system and reducing fraud. Criteria for reducing wait times and wrongful denials were not included.  However, wrongfully denying benefits has a huge negative  impact on the citizens who rely on the system.  If criteria like minimizing wrongful denials were not included in the contract, should engineers have included them in their optimization algorithm?  Why or why not?
+
+A10. As an engineer, the focus should be to provide an algorithm that fits best to the situation, and improve an existing process on all regards. IBM stuck to the contract's definition and did not focus on the actual application of the algorithm, which led them to produce a solution that was not a good answer to the problem. There are at least two reasons why the engineers should have included the criteria in their goals. The first is that as an engineer, they are expected to be able to have an overview of the big picture, and think about the project as a whole instead of just the programming aspect. The second is that it probably ended up costing IBM a lot of money in lawsuits, which could have been easily avoided by providing a relevant service.
+
+
+
+Q11. Imagine that after completing CS106B you are hired at IBM as an engineer working on this system. How might you have approached designing and setting the goals of this system?  How might you apply algorithmic analysis tools to build a system that achieved  the desired goals? Could you do so in a way that avoids the severe negative impacts on users of the system that are outlined in the case study?
+
+A11. As an engineer at IBM working on this project, I would have approached the problem by focusing on the user experience. Oftentimes, focusing on simplicity also results in a cleaner and simpler algorithm. Once the goals are set for the algorithm, then algorithmic analysis tools can be applied to obtain an efficient project - one that would not have bad consequences on the users.

@@ -1,0 +1,135 @@
+Before submitting this file, make sure that there are no more TODO
+placeholders remaining in the file (and remove this comment too).
+
+Perfect Numbers
+---------------
+
+Before submitting this file, make sure that there are no more TODO
+placeholders remaining in the file (and remove this comment too).
+
+Q1. Roughly how long did it take your computer to do the search? How many perfect numbers were found and what were they?
+
+A1. It took about 1.5s to run the search. 4 perfect numbers where found: 6, 28, 496 and 8128.
+
+
+
+Q2. Make a table of the timing results for `findPerfects` that you observed. (old-school table of text rows and columns is just fine)
+
+A2. 
+
+Size 		Time
+
+ 38 750		 0.991  secs
+
+ 77 500		 3.811  secs
+
+155 000		15.140  secs
+
+310 000		60.288  secs
+
+
+
+
+Q3. Does it take the same amount of work to compute `isPerfect` on the number 10 as it does on the number 1000? Why or why not? Does it take the same amount of work for `findPerfects` to search the range of numbers from 1-1000 as it does to search the numbers from 1000-2000? Why or why not?
+
+A3. 'isPerfect' uses the 'divisorSum' function, which iterates through all integers (from 1 to 10 or 1 to 1000). It therefore takes more work to compute 'isPerfect' for 1000 than for 10 (and we can assume the relationship between work and integer value is somewhat linear.
+'findPerfect' iterates through all integers from start to stop. For each integer, it uses the function 'isPerfect', which iterates from 1 to this integer. This is why iterating From 1-1000 takes less work than iterating from 1000-2000: although the first loop iterates through the same number of integers, the 'isPerfect' loop has more integers to iterate through with 1000-2000.
+
+
+
+Q4. Extrapolate from the data you gathered and make a prediction: how long will it take `findPerfects` to reach the fifth perfect number?
+
+A4. Using the the relation found with the previous data (y = 8E-10 x ^ 1,977), 'findPerfects' should take about 163 hours to find the fifth perfect number.
+
+
+
+Q5. Do any of the tests still pass even with this broken function? Why or why not?
+
+A5. The first test supposed to test the sum of divisors for small inputs does not pass, as an offset of 1 was added to the sum of divisors.
+The second test and the fifth test are supposed to test three perfect numbers and do not pass either, as this offset changes the sum of divisors (and therefore the condition n == divisorSum(n) is False)
+The third test passes as the two non perfect numbers given still do not pass the n == divisorSum(n) condition even with the offset. However this is not always the case, as the next test shows.
+The fourth test does not pass, as with this offset the number 1 is considered as perfect: n = 1 and divisorSum(1) = 0 + 1 = 1, therefore 1 == divisorSum(1) is True.
+The sixth test passes by default as it is just a time measurement.
+The STUDENT_TEST to test negative numbers still passes, since the divisor are computed in a loop from 1 to <n (and since n is negative, the program does not enter the loop). This test would fail if long total = n where n is a negative number, and the STUDENT_TEST tests for this specific negative n value. 
+
+
+
+Q6. Explain your testing strategy for `smarterSum` and how you chose your specific test cases that lead you to be confident the function is working correctly.
+
+A6. The first test for smarterSum is to check if a small input (12) returns the right output. Once this test passes, a number which has an integer squared root (25) is used as input to check against edge cases.
+After this test, the function's behaviour against 0 and negative values is also tested. 
+
+
+
+Q7. Record your timing results for `findPerfectsSmarter` into a table.
+
+A7. 
+
+Size			Time
+
+ 1 500 000		 3.020 secs
+
+ 3 000 000		 8.121 secs
+ 
+ 6 000 000 		22.427 secs
+
+12 000 000		61.582 secs
+
+
+
+Q8. Make a prediction: how long will `findPerfectsSmarter` take to reach the fifth perfect number?
+
+A8. The timing results give the following relationship: y = 3E-09 x ^ 1,4515. We can see that the power is almost 1.5, which confirms the N*sqrt(N) relationship. Using the formula, we can predict that the fifth perfect number will take 252 seconds to find (much faster than before).
+
+
+
+Q9. Explain how you chose your specific test cases and why they lead you to be confident `findNthPerfectEuclid` is working correctly.
+
+A9. Since we assume that the input will be a strictly positive integer, and the long type does not enable computing after 5, we can test the function by checking the value for each integer from 1 to 5. We could check with the isPerfectSmarter function, but it would only validate that the function returns perfect numbers. Running tests verifying the value instead allows for a finer test, verifying if the function returns perfect numbers - in the right order. 
+
+
+
+
+
+
+Soundex
+-------
+
+Q10. What is the Soundex code for "Angelou"? What is the code for your own surname?
+
+A10. The Soundex code for "Angelou" is A524. The Soundex code for my own surname (Thomas) is T520
+
+
+
+Q11. Before writing any code, brainstorm your plan of attack and sketch how you might decompose the work into smaller tasks. Briefly describe your decomposition strategy.
+
+A11. The plan of attack is the following: a function has to take a name as input, and return the associated Soundex code. This main function will use other functions to decompose this task.
+
+Function 1 will take the name as input and return the name without non-letters.
+
+Function 2 will take the output of function 1 as an argument, and encode each letter to a digit following the Soundex table. 
+
+Function 3 will take the output of function 2 as an argument, and return the code without adjacent duplicate digits.
+
+Function 4 will take the output of function 3 as well as the name without non-letters (output of function 1) as arguments, and replace the first character of the code with the first character of the name (converted to an uppercase).
+
+Function 5 will take the output of function 4 as an argument, and discard all zeros from this code.
+
+Function 6 will take the output of function 5 as an argument, and padd or truncate the code to bring it to a length of 4. 
+
+
+
+Q12. Think about one or more examples of a class of names that the Soundex system might not work well for. Explain what this class of names is and why the system might incorrectly group them or mis-categorize one of the names.
+
+A12. Names that are longer than the American average may not perform as well, as Soundex truncates their code to 4 characters. 
+In addition, the encoding is based on the spelling. This means that although the spelling of a name could have different pronunciations, Soundex does not account for this. For languages using other alphabets than the American one, names can only be entered using an American approximation, which would not work well. Even for languages using the same alphabet, a given spelling might be pronounced in a different way in another country.
+
+
+
+Q13. Suppose you are a software engineer working for the U.S. government. You have been tasked with implementing a system that collects names as part of the Census survey and analyzes these names using a phonetic algorithm. Your boss suggests using Soundex and notes that the algorithm is only expected to work for ASCII-encoded strings, since supporting Unicode would require extra work and time. What would your response be and why? What representational harms might result from building a system that exclusively uses Soundex and/or ASCII?
+
+A13. As an employee for the U.S. government, I would suggest a different approach to have a more inclusive algorithm: using Unicode and more advanced phonetic algorithms. Although this would take extra work and time, the resulting system would work with a significantly larger proportion of names - which is particularly relevant in a globalised society where immigration is more and more common.
+By building a system exclusively relying on Soundex and/or ASCII, the names that the Soundex system might not work well for
+would be misrepresented in all the studies and projects relying on it. Since we can imagine that a U.S. government system would be used in a variety of applications, it is important provide a well working and relevant system. 
+
+

@@ -1,0 +1,236 @@
+Before submitting this file, make sure that there are no more TODO
+placeholders remaining in the file (and remove this comment too).
+
+Warmup
+-------
+Q1. How do the values of the member variables of `allBalls[0]` change from iteration to iteration? Specifically, what happens to the values of `_id`, `_x`, and `_y`?
+
+A1. We can see that from one iteration to another, the _id attribute stays constant, and _x and _y evolve in a linear way (since _vx and _vy are constant) until a wall is hit - then it continues to evolve linearly but with a different speed.
+
+
+
+Q2. How do the values of the member variables of the stuck ball change from iteration to iteration? Contrast this to your answer to the previous question.
+
+A2. We can see that from iteration to iteration, _y alternates between two values, and _vy alternates between k and -k (k is a number). _x evolves normally.
+
+
+
+Q3. After forcing the stuck ball to position (0, 0), does the ball move normally from there or does it stay stuck?
+
+A3. After forcing the ball to (0, 0), it moves normally from there.
+
+
+
+Q4. On your system, what is the observed consequence of these memory errors:
+- access an index outside the allocated array bounds?
+- delete same memory twice?
+- access memory after it has been deleted?
+
+A4.
+- Index out of bounds:
+No errors are raised. If we change the value display format to see 1000 elements, we can see that setting the element outside of bounds "worked", and the test is considered a success.
+
+- Delete same memory twice:
+The program crashes and we get this error:
+"An abort error (SIGABRT) was raised during program execution
+This error is raised by system functions that detect corrupt state"
+
+- Access memory after deletion:
+The program compiles but the test fails, as searching for tasklist[0] after tasklist has been deleted returns an empty string. 
+
+
+
+PQArray
+-------
+Q5. There are extensive comments in both the interface (`pqarray.h`) and implementation (`pqarray.cpp`). Explain how and why the comments in the interface differ from those in the implementation. Consider both the content and audience for the documentation.
+
+A5. We can see that the interface has comments related to the way the class is meant to be used, and does not refer to the actual work that is being done behind the scenes. On the other hand, the implementation's comments explain what each function does in detail. This is because the interface is supposed to help the user understand what each function does in regard to the object of the corresponding class, while the implementation is read when the user wants to understand the inner workings of the class.
+
+
+
+Q6. The class declares member variables `_numAllocated` and `_numFilled`. What is the difference between these two counts and why are both needed?
+
+A6. _numAllocated keeps track of the size of the allocated array, while _numFilled keeps track of the number of elements that are in the array. Both are needed as there cannot be more elements than the size of the array - in other words, _numAllocated has to be superior to _numFilled.
+
+
+Q7. Although code within the body of a member function can directly access the object's member variables, the implementer may instead choose to call public member functions to get information about the object. For example, note how the operations `isEmpty()` and `peek()` intentionally call `size()` instead of using `_numFilled` or how `dequeue()` calls `peek()` to retrieve the frontmost element. Why might be this be considered a better design?
+
+A7. In those cases, the member variables are not supposed to be modified. Calling the member variables inside of the function might lead to a modification of the variables if there is a problem in the code, which would then be hard to debug. On the other hand, using the public member functions avoids redundancy and has a predictable behaviour.
+
+
+
+Q8. Give the results from your time trials and explain how they support your prediction for the Big-O runtimes of `enqueue` and `dequeue`.
+
+A8.
+
+
+Line 385 TIME_OPERATION fillQueue(pq, size) (size =    15000) completed in    0.847 secs
+Line 386 TIME_OPERATION emptyQueue(pq, size) (size =    15000) completed in    0.000 secs
+Line 385 TIME_OPERATION fillQueue(pq, size) (size =    30000) completed in    3.408 secs
+Line 386 TIME_OPERATION emptyQueue(pq, size) (size =    30000) completed in    0.000 secs
+Line 385 TIME_OPERATION fillQueue(pq, size) (size =    60000) completed in   13.789 secs
+Line 386 TIME_OPERATION emptyQueue(pq, size) (size =    60000) completed in    0.001 secs
+Line 385 TIME_OPERATION fillQueue(pq, size) (size =   120000) completed in   54.748 secs
+Line 386 TIME_OPERATION emptyQueue(pq, size) (size =   120000) completed in    0.002 secs
+
+This supports our predictions of Big-O runtimes for enqueue and dequeue:
+For fillQueue, we can see that the runtime grows quadratically. fillQueue is calling the enqueue function in each of its N loops. Having a O(N^2) complexity in total means that enqueue has a O(N) complexity.
+emptyQueue is growing linearly, and is calling the dequeue function in each of its N loops. Having a O(N) complexity in total means that the dequeue function has a O(1) complexity.
+
+
+
+PQ Client
+---------
+Q9. Based on the Big O of `enqueue`/`dequeue`, what do you expect for the Big O of `pqSort` if using a `PQArray`? Run some timing trials to confirm your prediction, and include that data in your answer.
+
+A9. The first for loop (N loops) is using enqueue, which has a O(N) complexity. This corresponds to O(N^2) for the first for loop. The second for loop (N loops) is using dequeue, which has a O(1) complexity. This corresponds to a O(N) complexity for the second for loop. In total, pqSort has a O(N^2) complexity, which is not optimal compared to other sorting algorithms seen in this course.
+
+Line 110 TIME_OPERATION pqSort(v) (size =     1000) completed in    0.005 secs
+Line 110 TIME_OPERATION pqSort(v) (size =     2000) completed in    0.017 secs
+Line 110 TIME_OPERATION pqSort(v) (size =     4000) completed in    0.062 secs
+Line 110 TIME_OPERATION pqSort(v) (size =     8000) completed in    0.242 secs
+
+The timing results confirm our analysis.
+
+
+
+Q10. Based on the Big O of `enqueue`/`dequeue`, what do you expect for the Big O of `topK` in terms of `k` and `n` if using a `PQArray`? Run some timing trials to confirm your prediction, and include that data in your answer.
+
+A10. The while loop loops over n elements. Inside of this loop, we are using enqueue (O(k)), and dequeue (O(1)). This means that the while loop has a O(n * k) complexity. The for loop loops over k elements, and accesses a fixed-size vector (O(1)) while dequeuing (O(1)). The for loop therefore has a 0(k) complexity. In total, topK should therefore have a O(n * k) complexity.
+
+
+topK: time trial n, keeping k constant
+    Line 97 TIME_OPERATION topK(stream, k) (size =   200000) completed in    0.175 secs
+    Line 97 TIME_OPERATION topK(stream, k) (size =   400000) completed in    0.367 secs
+    Line 97 TIME_OPERATION topK(stream, k) (size =   800000) completed in    0.736 secs
+    Line 97 TIME_OPERATION topK(stream, k) (size =  1600000) completed in    1.421 secs
+
+
+topK: time trial k, keeping n constant
+    Line 108 TIME_OPERATION topK(stream, k) (size =     1000) completed in    0.220 secs
+    Line 108 TIME_OPERATION topK(stream, k) (size =     2000) completed in    0.330 secs
+    Line 108 TIME_OPERATION topK(stream, k) (size =     4000) completed in    0.736 secs
+    Line 108 TIME_OPERATION topK(stream, k) (size =     8000) completed in    2.060 secs
+
+These results confirm that topK is O(n) and O(k), which means it has a O(n * k) complexity.
+
+
+
+PQHeap
+------
+Q11. Start with an empty binary heap and enqueue the nine `DataPoint`s in the order shown below and show the result. You only need to show the final heap, not intermediate steps. Draw the heap as tree-like diagram with root element on top, its two children below, and so on. Yes, we know that we're asking you to draw pictures in a text file (we love the [AsciiFlow](http://asciiflow.com/) tool for "drawing" in text).
+
+A11.
+                                  ┌──────┐
+                   ┌──────────────┤"T", 1├────────────────┐
+                   │              └──────┘                │
+                   ▼                                      ▼
+               ┌──────┐                               ┌──────┐
+         ┌─────┤"B", 3├─────┐                   ┌─────┤"G", 2├─────┐
+         │     └──────┘     │                   │     └──────┘     │
+         ▼                  ▼                   ▼                  ▼
+     ┌──────┐            ┌───────┐          ┌──────┐            ┌──────┐
+   ┌─┤"S", 6├─┐          │"A", 5"│          │"V", 9│            │"R", 4│
+   │ └──────┘ │          └───────┘          └──────┘            └──────┘
+   ▼          ▼
+┌──────┐  ┌──────┐
+│"O", 8│  │"K", 7│
+└──────┘  └──────┘
+
+
+
+Q12. Make two calls to `dequeue` on the above binary heap and draw the updated result.
+
+A12.
+                                  ┌──────┐
+                   ┌──────────────┤"G", 2├────────────────┐
+                   │              └──────┘                │
+                   ▼                                      │
+               ┌──────┐                               ┌───┴──┐
+         ┌─────┤"B", 3├─────┐                   ┌─────┤"R", 4├─────┐
+         │     └──────┘     │                   │     └──────┘     │
+         ▼                  ▼                   ▼                  ▼
+     ┌──────┐            ┌───────┐          ┌──────┐            ┌──────┐
+   ┌─┤"S", 6│            │"A", 5 │          │"V", 9│            │"K", 7│
+   │ └──────┘            └───────┘          └──────┘            └──────┘
+   ▼
+┌──────┐
+│"O", 8│
+└──────┘
+
+
+
+Q13. Draw the array representation of the binary heap above. Label each element with its array index.
+
+A13.
+
+[{"G",2}, {"B",3}, {"R",4}, {"S",6}, {"A",5}, {"V",9}, {"K",7}, {"O",8}]
+
+    0        1        2        3        4        5        6        7
+
+
+
+Q14. Re-run the timing trials on `pqclient.cpp` and provide your results that confirm that `pqSort` runs in time O(NlogN) and `topK` in O(NlogK).
+
+A14. 
+
+topK: time trial n, keeping k constant
+    Line 97 TIME_OPERATION topK(stream, k) (size =   200000) completed in    0.199 secs
+    Line 97 TIME_OPERATION topK(stream, k) (size =   400000) completed in    0.402 secs
+    Line 97 TIME_OPERATION topK(stream, k) (size =   800000) completed in    0.797 secs
+    Line 97 TIME_OPERATION topK(stream, k) (size =  1600000) completed in    1.600 secs
+
+
+topK: time trial k, keeping n constant
+    Line 108 TIME_OPERATION topK(stream, k) (size =     1000) completed in    0.255 secs
+    Line 108 TIME_OPERATION topK(stream, k) (size =     2000) completed in    0.263 secs
+    Line 108 TIME_OPERATION topK(stream, k) (size =     4000) completed in    0.271 secs
+    Line 108 TIME_OPERATION topK(stream, k) (size =     8000) completed in    0.287 secs
+
+For topK, we can see that the algorithm is O(n) and O(log k), which means it is O(n * log k).
+
+pqSort: time trial
+    Line 117 TIME_OPERATION pqSort(v) (size =   100000) completed in    0.063 secs
+    Line 117 TIME_OPERATION pqSort(v) (size =   200000) completed in    0.134 secs
+    Line 117 TIME_OPERATION pqSort(v) (size =   400000) completed in    0.285 secs
+    Line 117 TIME_OPERATION pqSort(v) (size =   800000) completed in    0.640 secs
+
+For pqSort, using excel we can see that the algorithm is O(n * log n).
+
+
+
+Embedded Ethics
+---------------
+Q15. Consider the differences between this three-bin priority queue and the priority queue you implemented on your assignment. Which would be more efficient to insert elements into and why? More generally, what are the benefits and disadvantages of using the three-bin priority queue vs. a regular priority queue?
+
+A15. Our priority queue heap has a O(log n) complexity for enqueuing elements. With a three-bin priority queue, we would have to do a conditional check on the priority of a new element and then enqueue it in a queue - which would result in a O(1) complexity. This new system would therefore be more efficient to insert elements into. While using a three-bin priority queue means that it is efficient and can easily handle large data sets, its disadvantage is that it is only able to handle three levels of priority - the priority is therefore handled in a very coarse way.
+
+
+
+Q16. Describe a real-world system where a three-bin priority queue could be used. What factors would you use to distinguish between a low vs. medium vs. high priority element? What limitations might you need to consider when using a three-bin priority queue to represent this system?
+
+A16. We could imagine implementing a three-bin priority queue for access to Covid-19 vaccines - first the people at risk and / or immunocompromised would get the vaccine, then the elderly, and finally the rest of the population. However, this system is very coarse and is not able to handle unanticipated cases. An other limitation would be that setting an age limit between the elderly and the other citizens would be arbitrary: if the limit is at 60 years, there would be a big difference between people who are 60 years and 1 month old, and those who are 59 years and 11 months old (which does not really make sense).
+
+
+
+Q17. Different institutions consider different factors in admissions and convert criteria to numbers different ways.  Regardless of which specific factors are considered, should an admissions department use a purely numerical rankings based system? Why or why not?
+If yes, discuss what factors you think would be best to include when calculating numerical rankings and why those factors are well-represented as numbers. If not, discuss what factors you think should be considered in college admissions that would be difficult to represent as a numerical score. There are no right or wrong answers here - we're genuinely interested in your thoughts!
+
+A17. Having a purely numerical system would probably be more interesting, for several reasons:
+- On a practical side, this is much easier to rank candidates with when there are a lot of applicants. This would simplify the process a lot, and might help reduce the admissions fee since less Human Resources would be used.
+- In terms of the ranking itself, we could imagine having different categories which would each have a numerical score. When a committee would be reviewing a candidate, they would have several categories where they could give a grade from 1 to 10. Using this approach would allow the grading to be less reviewer dependant, as the grades could be weighted based on the reviewer to have a common median across all reviewers. The categories could be: academic achievements, extracurriculars, course load, personal history, ethics and aspiration, match with the university's way of thinking... Then a grade would be given by summing all those categories (which could have a different weight if the committee choses so).
+
+
+
+Q18. Describe a real-world system that requires ranking but in which classification with a single number misses important context (i.e. a priority queue might not be the best way to store the objects being ranked). Make sure to use an example that hasn't already been discussed in lecture or in this assignment.
+
+A18. In France, when a student choses a class for a quarter, they are granted the class based on their GPA since the capacity for most classes is not sufficient to accommodate for each student who wants to take the course. It is logical to have a form of ranking to access a class (at least it makes more sense than having a FIFO system), but basing it only on GPA is probably not the best way to approach the problem. Indeed, parameters such as student aspiration, and personal reasons for wanting to take the class should be considered as well.
+
+
+
+Q19. How would you design an implementation for the hospital's priority queue that dynamically determines which patient is the best match whenever a new organ becomes available? __Note:__ Your design does not have to be the fastest or most efficient.
+
+A19. Instead of having a waitlist to get an organ, I would have a database with each patient's condition, symptoms, survival benefit, etc. When a new organ is made available, a score would be computed for each patient, taking into account the tissue compatibility. A priority queue could be used to sort the patients, and the top 5 patients (for example) would be presented to a committee of doctors who could then make a decision between the best candidates based on their experience and not just an algorithm.
+
+
+
